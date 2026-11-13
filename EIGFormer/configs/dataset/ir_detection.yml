@@ -1,0 +1,51 @@
+task: detection
+
+evaluator:
+  type: CocoEvaluator
+  iou_types: ['bbox', ]
+
+num_classes: 1 # your dataset classes
+remap_mscoco_category: False
+save_period: -1
+train_dataloader:
+  type: DataLoader
+  dataset:
+    type: CocoDetection
+    # img_folder: /home/waas/DEIM/dataset/images/images
+    # ann_file: /home/waas/DEIM/dataset/images/annotations/data.json
+    img_folder:
+    ann_file:
+    # img_folder: /root/code/project/DEIM/dataset/images/images
+    # ann_file: /root/code/project/DEIM/dataset/images/annotations/data.json
+    return_masks: False
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: True
+  num_workers: 4
+  drop_last: True
+  pin_memory: True
+  collate_fn:
+    type: BatchImageCollateFunction
+
+
+val_dataloader:
+  type: DataLoader
+  dataset:
+    type: CocoDetection
+    # img_folder: /home/waas/DEIM/dataset/val/images
+    # ann_file: /home/waas/DEIM/dataset/val/annotations/data.json
+    img_folder:
+    ann_file:
+    # img_folder: /root/code/project/DEIM/dataset/val/images
+    # ann_file: /root/code/project/DEIM/dataset/val/annotations/data.json
+    return_masks: False
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: False
+  num_workers: 4
+  drop_last: False
+  pin_memory: True
+  collate_fn:
+    type: BatchImageCollateFunction

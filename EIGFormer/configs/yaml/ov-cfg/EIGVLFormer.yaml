@@ -1,0 +1,39 @@
+backbone:
+  # [from, module, args]
+  - [-1, SGDSStem, [16, 16, True]] # 0-P2/4
+  - [-1, HG_Stage, [16, 64, 1, 3, False, False, 3, True, 'se']] # 1-P2/4
+  - [-1, HG_Stage, [32, 256, 1, 3, True, False, 3, True, 'se']] # 2-P3/8
+  - [-1, HG_Stage, [64, 512, 2, 3, True, True, 5, True, 'se']]  # 3-P4/16
+  - [-1, HG_Stage, [128, 1024, 1, 3, True, True, 5, True, 'se']] # 4-P5/32
+
+encoder:
+  - [[1,2], HCSER, [256, 64]]
+  - [[2,3], HCSER, [256, 128]]
+  - [4, ConvNormLayer_fuse, [256, 1, 1]]
+
+  - [-1, TransformerEncoderBlock, [8, 1024, 0.1, "relu", 10000, False]] # 8-P5/32
+
+  - [-1, ConvNormLayer_fuse, [256, 1, 1]] # 9
+  - [-1, nn.Upsample, [None, 2, "nearest"]] # 10
+  - [[-1, 6], Concat, []] # 11-P4/16
+  - [-1, RepNCSPELAN4, [256, 512, 64, 1, False, 'silu']] # 12-P4/16
+  - [-1, MaxSigmoidAttnBlock, [256]] # 13-P4/16
+
+  - [-1, ConvNormLayer_fuse, [256, 1, 1]] # 14
+  - [-1, nn.Upsample, [None, 2, "nearest"]] # 15
+  - [[-1, 5], Concat, []] # 16-P3/8
+  - [-1, RepNCSPELAN4, [256, 512, 64, 1, False, 'silu']] # 17-P3/8
+  - [-1, MaxSigmoidAttnBlock, [256]] # 18-P3/8
+
+  - [-1, SCDown, [256, 3, 2, 'silu']] # 19-P4/16
+  - [[-1, 14], Concat, []] # 20-P4/16
+  - [-1, RepNCSPELAN4, [256, 512, 64, 1, False, 'silu']] # 21-P4/16
+  - [-1, MaxSigmoidAttnBlock, [256]] # 22-P4/16
+
+  - [-1, SCDown, [256, 3, 2, 'silu']] # 23-P5/32
+  - [[-1, 9], Concat, []] # 24-P5/32
+  - [-1, RepNCSPELAN4, [256, 512, 64, 1, False, 'silu']] # 25-P5/32
+  - [-1, MaxSigmoidAttnBlock, [256]] # 26-P5/32
+
+decoder:
+  - [[18, 22, 26], OVDFINETransformer, {"feat_strides":[8, 16, 32], "hidden_dim": 256, "num_levels": 3, "num_layers": 3, "num_points": [3, 6, 3], "dim_feedforward": 1024}]

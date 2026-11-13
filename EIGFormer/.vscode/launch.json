@@ -1,0 +1,48 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    // "configurations": [
+    //     {
+    //         "name": "Python 调试程序: 当前文件",
+    //         "type": "debugpy",
+    //         "request": "launch",
+    //         // "program": "/root/miniconda3/envs/pytorch_2_2_2_py310/lib/python3.10/site-packages/torch/distributed/run.py",
+    //         "program": "/root/code/conda/env/pytorch_2_2_2_py39/lib/python3.9/site-packages/torch/distributed/run.py",
+    //         "console": "integratedTerminal",
+    //         "justMyCode": true,
+    //         "args": "--master_port=7777 --nproc_per_node=1 train.py -c configs/dfine/dfine_hgnetv2_n_mal_custom.yml --seed=0"
+    //         // "args": "--master_port=7777 --nproc_per_node=1 train.py -c configs/test/deim_hgnetv2_s_visdrone.yml --seed=0"
+    //         // "args": "--master_port=7777 --nproc_per_node=1 train.py -c configs/test/dfine_hgnetv2_n_visdrone.yml --seed=0"
+    //     }
+    // ]
+
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            // "args": "-c configs/test/dfine_hgnetv2_n_visdrone.yml"
+            // "args": "-c configs/test/dfine_hgnetv2_n_mm.yml"
+            "args": "-c configs_easy/dfine-seg.yml"
+            // "args": "-c configs/test/dfine_dinov3_s_visdrone.yml"
+            // "args": "-c configs/test/deim_hgnetv2_s_visdrone.yml --test-only -r ../best_stg2.pth"
+            // "args": "-c configs/test/dfine_hgnetv2_test.yml -r outputs/dfine-s-GQL/best_stg2.pth --test-only"
+        }
+    ]
+
+    // "configurations": [
+    //     {
+    //         "name": "Python Debugger: Current File",
+    //         "type": "debugpy",
+    //         "request": "launch",
+    //         "program": "${file}",
+    //         "console": "integratedTerminal",
+    //         "justMyCode": false
+    //     }
+    // ]
+}

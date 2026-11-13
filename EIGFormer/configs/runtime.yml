@@ -1,0 +1,42 @@
+print_freq: 100
+output_dir: './logs'
+checkpoint_freq: 12
+plot_train_batch_freq: 12
+
+sync_bn: True
+find_unused_parameters: True
+verbose_type: 'origin' # origin:原始的输出方式 progress:进度条形式
+time_debug: false
+
+use_amp: False
+scaler:
+  type: GradScaler
+  enabled: true
+
+use_ema: False
+ema:
+  type: ModelEMA
+  decay: 0.9999
+  warmups: 1000
+
+cache_imgsz: 960
+ram_cache: False
+
+yolo_metrice: True # 需要输出YOLO指标的设置为True
+
+# 训练时对比历史 log.txt 的 COCO AP 曲线。
+baseline_log_monitor:
+  enabled: false
+  path: outputs/dfine_hgnetv2_s_mm/log.txt
+  metric: test_coco_eval_bbox[0]
+  start_ratio: 0.5 # 训练到总 epoch 的 50% 后开始判定早停
+  min_ap_gap: 0.03 # AP 低于 baseline 超过 0.03，即低 3 个点
+  patience: 2 # 连续 2 轮超过差距才停止
+
+# 经典早停：验证集指标不再提升时提前结束训练（普通训练/蒸馏/剪枝微调/OBB 均生效）
+early_stop:
+  enabled: false
+  metric: ['test_coco_eval_bbox[0]', 'test_yolo_eval_obb[0]'] # 按顺序取第一个能取到值的选择器；OBB 训练只会命中 test_yolo_eval_obb[0]
+  patience: 10       # 连续多少轮无提升后停止
+  min_delta: 0.0005  # 视为“提升”的最小改善量
+  start_ratio: 0.0   # 训练到总 epoch 的该比例后才开始判定
